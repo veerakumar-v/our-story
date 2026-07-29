@@ -1,690 +1,827 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Right Person, Wrong Direction — Our Story</title>
-<meta name="description" content="A true story that began with a question in a railway ticket queue.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Karla:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<style>
-:root{
-  --navy:#14324A; --navy-deep:#0B2131;
-  --maroon:#7A3B33; --maroon-deep:#5A2A24;
-  --marigold:#DE9F35; --marigold-soft:#EFC978;
-  --paper:#EFE6D2; --paper-card:#FBF6EA;
-  --ink:#221E18; --ink-soft:#5B5346;
-  --font-display:'Fraunces',Georgia,serif;
-  --font-mono:'Space Mono','Courier New',monospace;
-  --font-body:'Karla','Segoe UI',sans-serif;
-}
-*{margin:0;padding:0;box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-body{font-family:var(--font-body);color:var(--ink);background:var(--paper);overflow-x:hidden;line-height:1.65;}
-svg text{font-family:var(--font-mono);}
-h1,h2{font-family:var(--font-display);}
-
-/* progress rail */
-.progress-rail{position:fixed;top:0;left:0;width:100%;height:36px;z-index:1000;display:flex;align-items:center;gap:12px;padding:0 16px;background:linear-gradient(180deg,rgba(239,230,210,.97),rgba(239,230,210,.88));border-bottom:1px solid rgba(34,30,24,.08);backdrop-filter:blur(3px);}
-.progress-track{flex:1;height:4px;border-radius:2px;background:repeating-linear-gradient(90deg,rgba(34,30,24,.16) 0 8px,transparent 8px 14px);position:relative;overflow:hidden;}
-.progress-fill{height:100%;width:0%;background:var(--marigold);border-radius:2px;}
-.progress-readout{font-family:var(--font-mono);font-size:.68rem;letter-spacing:.08em;color:var(--ink-soft);white-space:nowrap;}
-
-/* scene shell */
-.scene{position:relative;min-height:100vh;display:flex;align-items:center;padding:4.5rem 6vw;}
-
-/* ticket card */
-.ticket{position:relative;max-width:1000px;width:100%;margin:0 auto;display:grid;grid-template-columns:1fr 2px 1fr;background:var(--paper-card);border-radius:16px;box-shadow:0 1px 0 rgba(34,30,24,.06),0 24px 50px -28px rgba(34,30,24,.45);opacity:0;transform:translateY(26px);transition:opacity .8s ease,transform .8s ease;}
-.scene.in-view .ticket{opacity:1;transform:none;}
-.ticket::before,.ticket::after{content:"";position:absolute;width:26px;height:26px;border-radius:50%;background:var(--paper);left:50%;transform:translateX(-50%);z-index:2;}
-.ticket::before{top:-13px;}
-.ticket::after{bottom:-13px;}
-.ticket-visual{grid-column:1;grid-row:1;aspect-ratio:4/3;min-height:230px;border-radius:16px 0 0 16px;overflow:hidden;position:relative;}
-.ticket-visual svg{width:100%;height:100%;display:block;}
-.ticket-seamline{grid-column:2;grid-row:1;border-left:2px dashed rgba(34,30,24,.28);margin:22px 0;}
-.ticket-stub{grid-column:3;grid-row:1;padding:2.3rem 2.2rem;display:flex;flex-direction:column;justify-content:center;}
-.scene:nth-of-type(even) .ticket-visual{grid-column:3;border-radius:0 16px 16px 0;}
-.scene:nth-of-type(even) .ticket-stub{grid-column:1;}
-
-.stop-label{font-family:var(--font-mono);letter-spacing:.12em;text-transform:uppercase;font-size:.72rem;color:var(--maroon);display:block;margin-bottom:.85rem;font-weight:700;}
-.ticket-stub h2{font-weight:600;font-size:clamp(1.35rem,2.4vw,1.9rem);color:var(--navy-deep);margin-bottom:1rem;line-height:1.25;}
-.ticket-stub p{font-size:1.02rem;color:var(--ink-soft);max-width:44ch;margin-bottom:.7rem;}
-.ticket-stub p:last-of-type{margin-bottom:0;}
-
-.sky-day{background:linear-gradient(180deg,#B7C7CC 0%,#E4DAC0 100%);}
-.sky-warm{background:linear-gradient(180deg,#E0C48C 0%,#EDE0BE 100%);}
-.sky-gold{background:linear-gradient(180deg,#E3AA5C 0%,#F0DBA0 100%);}
-.sky-dusk{background:linear-gradient(180deg,#232C42 0%,#6B4652 55%,#C9834A 100%);}
-
-/* hero */
-.hero{justify-content:center;}
-.hero-ticket{position:relative;max-width:720px;width:100%;margin:0 auto;background:var(--paper-card);border-radius:18px;box-shadow:0 1px 0 rgba(34,30,24,.06),0 24px 55px -28px rgba(34,30,24,.45);text-align:center;overflow:hidden;opacity:0;transform:translateY(20px);transition:opacity .9s ease,transform .9s ease;}
-.scene.in-view .hero-ticket{opacity:1;transform:none;}
-.hero-ticket-info{padding:3rem 2.6rem 2.2rem;}
-.eyebrow{font-family:var(--font-mono);letter-spacing:.14em;text-transform:uppercase;font-size:.72rem;color:var(--maroon);margin-bottom:1.1rem;font-weight:700;}
-.hero-ticket h1{font-weight:600;font-size:clamp(2rem,5.6vw,3.2rem);color:var(--navy-deep);margin-bottom:1.2rem;line-height:1.12;}
-.hero-ticket-info p{font-size:1.08rem;color:var(--ink-soft);max-width:48ch;margin:0 auto;}
-.ticket-fields{display:flex;justify-content:center;align-items:center;gap:1.8rem;margin-top:1.8rem;}
-.field{display:flex;flex-direction:column;align-items:center;}
-.field-label{font-family:var(--font-mono);font-size:.64rem;letter-spacing:.16em;color:var(--ink-soft);}
-.field-value{font-family:var(--font-mono);font-size:.92rem;color:var(--navy);font-weight:700;margin-top:.3rem;}
-.field-divider{width:1px;height:26px;background:rgba(34,30,24,.18);}
-.hero-seamline{position:relative;height:0;border-top:2px dashed rgba(34,30,24,.25);margin:0 1.6rem;}
-.hero-seamline::before,.hero-seamline::after{content:"";position:absolute;top:0;transform:translateY(-50%);width:24px;height:24px;border-radius:50%;background:var(--paper);}
-.hero-seamline::before{left:-12px;}
-.hero-seamline::after{right:-12px;}
-.hero-stage-wrap{padding:1.7rem 0 2.1rem;}
-.hero-stage{height:160px;overflow:hidden;}
-.hero-stage svg{width:100%;height:100%;}
-.scroll-cue{display:inline-block;font-family:var(--font-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--maroon);font-weight:700;}
-.scene.in-view .scroll-cue{animation:bounce 1.8s ease-in-out infinite;}
-@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(7px);}}
-
-footer{text-align:center;padding:3rem 1.5rem 5rem;color:var(--ink-soft);font-size:.85rem;font-family:var(--font-mono);letter-spacing:.03em;}
-
-/* character animation - translate only, always safe */
-.scene.in-view .bodybob{animation:bob .85s ease-in-out infinite;}
-@keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(-3px);}}
-.scene.in-view .leg-l{animation:stepL .85s ease-in-out infinite;}
-.scene.in-view .leg-r{animation:stepR .85s ease-in-out infinite;}
-@keyframes stepL{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
-@keyframes stepR{0%,100%{transform:translateY(-6px);}50%{transform:translateY(0);}}
-.scene.in-view .run .leg-l,.scene.in-view .run .leg-r{animation-duration:.32s;}
-.scene.in-view .run .bodybob{animation-duration:.32s;}
-
-@keyframes moveLeft{from{transform:translateX(0);}to{transform:translateX(-118px);}}
-@keyframes moveRight{from{transform:translateX(0);}to{transform:translateX(118px);}}
-@keyframes moveBack{from{transform:translateX(150px);opacity:0;}to{transform:translateX(0);opacity:1;}}
-@keyframes moveRun{from{transform:translateX(0);}to{transform:translateX(190px);}}
-.scene.in-view .move-left{animation:moveLeft 2.2s ease-in forwards;}
-.scene.in-view .move-right{animation:moveRight 2.2s ease-in forwards;}
-.scene.in-view .move-back{animation:moveBack 1.8s ease-out forwards;}
-.scene.in-view .move-run{animation:moveRun 1.5s ease-in forwards;}
-
-@keyframes trainAcross{from{transform:translateX(-260px);}to{transform:translateX(860px);}}
-.scene.in-view .train-loop{animation:trainAcross 15s linear infinite;}
-@keyframes trainDepart{to{transform:translateX(240px);opacity:0;}}
-.scene.in-view .train-depart{animation:trainDepart 3.4s ease-in forwards;}
-@keyframes smokeRise{0%{transform:translateY(0) scale(.6);opacity:.6;}100%{transform:translateY(-24px) scale(1.3);opacity:0;}}
-.scene.in-view .smoke{animation:smokeRise 2.2s ease-out infinite;}
-
-.bubble{opacity:0;transition:opacity .5s ease .9s;}
-.scene.in-view .bubble{opacity:1;}
-@keyframes pulseSpark{0%,100%{transform:scale(.85);opacity:.5;}50%{transform:scale(1.15);opacity:1;}}
-.scene.in-view .spark{animation:pulseSpark 1.6s ease-in-out infinite;transform-origin:center;}
-@keyframes ringShake{0%,100%{transform:translateX(0);}25%{transform:translateX(-3px);}75%{transform:translateX(3px);}}
-.scene.in-view .phone-ring{animation:ringShake .5s ease-in-out infinite;}
-@keyframes avatarScan{0%,100%{opacity:.35;transform:scale(1);}50%{opacity:1;transform:scale(1.1);}}
-.scene.in-view .avatar{animation:avatarScan 2.6s ease-in-out infinite;}
-@keyframes dotPulse{0%,100%{opacity:.3;transform:translateY(0);}50%{opacity:1;transform:translateY(-3px);}}
-.scene.in-view .dot{animation:dotPulse 1.2s ease-in-out infinite;}
-@keyframes scrollGround{from{transform:translateX(0);}to{transform:translateX(-48px);}}
-.scene.in-view .ground-scroll{animation:scrollGround 1s linear infinite;}
-@keyframes twinkle{0%,100%{opacity:.2;}50%{opacity:1;}}
-.scene.in-view .star{animation:twinkle 2.4s ease-in-out infinite;}
-
-.finale .ticket{cursor:pointer;}
-.tap-hint{font-family:var(--font-mono);font-size:.72rem;color:var(--ink-soft);margin-top:1rem;letter-spacing:.03em;}
-.ticket-stamp{position:fixed;width:90px;height:90px;color:var(--maroon);pointer-events:none;z-index:2000;opacity:0;animation:stampIn 1.8s cubic-bezier(.2,1.6,.4,1) forwards;}
-@keyframes stampIn{0%{opacity:0;transform:scale(1.7);}15%{opacity:.9;transform:scale(.94);}25%{opacity:.9;transform:scale(1);}80%{opacity:.85;}100%{opacity:0;transform:scale(1);}}
-
-@media(max-width:820px){
-  .ticket{grid-template-columns:1fr;grid-template-rows:auto auto;}
-  .ticket-visual,.scene:nth-of-type(even) .ticket-visual{grid-column:1;grid-row:1;border-radius:16px 16px 0 0;}
-  .ticket-stub,.scene:nth-of-type(even) .ticket-stub{grid-column:1;grid-row:2;border-top:2px dashed rgba(34,30,24,.25);}
-  .ticket-seamline{display:none;}
-  .ticket::before,.ticket::after{display:none;}
-  .scene{padding:3.5rem 6vw;min-height:auto;}
-  .ticket-fields{gap:1.2rem;}
-}
-@media(prefers-reduced-motion:reduce){
-  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;}
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Story — A Railway Love Story</title>
+    <meta name="description" content="A beautiful love story that began at a railway station — told through animation and art.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="welcome.css">
+    <link rel="stylesheet" href="admin.css">
 </head>
 <body>
 
-<div class="progress-rail">
-  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
-  <span class="progress-readout" id="stopReadout">BOARDING</span>
-</div>
-
-<section class="scene hero">
-  <div class="hero-ticket">
-    <div class="hero-ticket-info">
-      <span class="eyebrow">A True Story — One-Way, It Turned Out</span>
-      <h1>Right Person,<br>Wrong Direction</h1>
-      <p>It started with a question in a ticket queue — and two people who somehow kept walking the wrong way toward each other.</p>
-      <div class="ticket-fields">
-        <div class="field"><span class="field-label">FROM</span><span class="field-value">STRANGERS</span></div>
-        <div class="field-divider"></div>
-        <div class="field"><span class="field-label">TO</span><span class="field-value">STILL BOARDING</span></div>
-      </div>
+    <!-- ===== WELCOME SCREEN ===== -->
+    <div class="welcome-overlay" id="welcomeOverlay">
+        <div class="welcome-glitter" id="welcomeGlitter"></div>
+        <div class="welcome-stars"></div>
+        <div class="welcome-content">
+            <div class="welcome-logo">
+                <div class="logo-heart-wrap">
+                    <span class="logo-heart">❤️</span>
+                    <div class="logo-ring r1"></div>
+                    <div class="logo-ring r2"></div>
+                    <div class="logo-ring r3"></div>
+                </div>
+            </div>
+            <h1 class="welcome-title">
+                <span class="wt-line1">A Story Written</span>
+                <span class="wt-line2">in the <em>Stars</em></span>
+            </h1>
+            <p class="welcome-tagline">Enter your name to unlock your story</p>
+            <div class="welcome-input-group">
+                <div class="input-glow"></div>
+                <input type="text" id="nameInput" class="welcome-input" placeholder="Your name..." autocomplete="off" spellcheck="false">
+                <div class="input-sparkle s1">✦</div>
+                <div class="input-sparkle s2">✧</div>
+                <div class="input-sparkle s3">✦</div>
+            </div>
+            <button class="welcome-btn" id="welcomeBtn">
+                <span class="btn-text">Continue</span>
+                <span class="btn-arrow">→</span>
+                <div class="btn-shimmer"></div>
+            </button>
+            <p class="welcome-hint">Every love story begins with a name...</p>
+        </div>
+        <div class="welcome-footer-decor">
+            <div class="wf-train">🚂</div>
+            <div class="wf-track"></div>
+        </div>
     </div>
-    <div class="hero-seamline"></div>
-    <div class="hero-stage-wrap">
-      <div class="hero-stage" data-illustration="hero" aria-hidden="true"></div>
-      <span class="scroll-cue">Scroll to board ↓</span>
+
+    <!-- ===== 404 SCREEN ===== -->
+    <div class="notfound-overlay" id="notfoundOverlay">
+        <div class="notfound-glitter" id="notfoundGlitter"></div>
+        <div class="notfound-stars"></div>
+        <div class="notfound-content">
+            <div class="notfound-icon">
+                <span class="nf-broken">💔</span>
+                <div class="nf-glow"></div>
+            </div>
+            <h1 class="notfound-title">404</h1>
+            <h2 class="notfound-subtitle">Story Not Found</h2>
+            <div class="notfound-divider">
+                <span class="nd-line"></span>
+                <span class="nd-star">✧</span>
+                <span class="nd-line"></span>
+            </div>
+            <p class="notfound-message">Please create a story with the author.</p>
+            <button class="notfound-btn" id="notfoundBtn">
+                <span>← Go Back</span>
+            </button>
+        </div>
+        <div class="notfound-particles" id="notfoundParticles"></div>
     </div>
-  </div>
-</section>
 
-<section class="scene" data-stop="1">
-  <div class="ticket">
-    <div class="ticket-visual sky-day" data-illustration="queue" aria-hidden="true"></div>
-    <div class="ticket-seamline"></div>
-    <div class="ticket-stub">
-      <span class="stop-label">Stop 01 · The Queue</span>
-      <h2>A stranger, speaking first</h2>
-      <p>She was a stranger, and she spoke first — right there in the ticket queue. She didn't know where to buy her ticket.</p>
-      <p>&ldquo;This line,&rdquo; I told her, pointing to where I stood. She smiled, and joined it.</p>
+    <!-- ===== PERSONALIZED GREETING OVERLAY ===== -->
+    <div class="greeting-overlay" id="greetingOverlay">
+        <div class="greeting-content">
+            <div class="greeting-sparkles" id="greetingSparkles"></div>
+            <h1 class="greeting-name" id="greetingName">Welcome ✨</h1>
+            <p class="greeting-sub" id="greetingSub">This story was written just for you...</p>
+            <div class="greeting-heart-burst" id="greetingBurst"></div>
+        </div>
     </div>
-  </div>
-</section>
 
-<section class="scene" data-stop="2">
-  <div class="ticket">
-    <div class="ticket-visual sky-day" data-illustration="feeling" aria-hidden="true"></div>
-    <div class="ticket-seamline"></div>
-    <div class="ticket-stub">
-      <span class="stop-label">Stop 02 · The First Feeling</span>
-      <h2>Just imagination, I told myself</h2>
-      <p>Something shifted in that first look — quiet, quick, easy to miss.</p>
-      <p>I told myself it was nothing. Just imagination, running ahead of itself.</p>
+    <!-- ===== ADMIN PANEL ===== -->
+    <div class="admin-overlay" id="adminOverlay">
+        <div class="admin-glitter" id="adminGlitter"></div>
+        <div class="admin-stars"></div>
+
+        <!-- Admin Header -->
+        <header class="admin-header">
+            <div class="admin-brand">
+                <span class="admin-logo">⚙️</span>
+                <div>
+                    <h1 class="admin-brand-title">Story Admin</h1>
+                    <p class="admin-brand-sub">Manage all love stories</p>
+                </div>
+            </div>
+            <button class="admin-logout-btn" id="adminLogout">
+                <span>← Logout</span>
+            </button>
+        </header>
+
+        <!-- Admin Content -->
+        <div class="admin-content">
+            <!-- Stories List Panel -->
+            <div class="admin-panel" id="adminListPanel">
+                <div class="admin-panel-header">
+                    <h2 class="admin-panel-title">📖 All Stories</h2>
+                    <button class="admin-create-btn" id="adminCreateBtn">
+                        <span>+ Create New Story</span>
+                    </button>
+                </div>
+                <div class="admin-stories-list" id="adminStoriesList">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+
+            <!-- Create / Edit Form Panel -->
+            <div class="admin-panel admin-form-panel" id="adminFormPanel" style="display:none;">
+                <div class="admin-panel-header">
+                    <h2 class="admin-panel-title" id="adminFormTitle">✨ Create New Story</h2>
+                    <button class="admin-back-btn" id="adminBackBtn">← Back to List</button>
+                </div>
+                <form class="admin-form" id="adminForm" autocomplete="off">
+                    <input type="hidden" id="formEditKey" value="">
+                    <div class="form-group">
+                        <label class="form-label" for="formName">Name (login key)</label>
+                        <input type="text" id="formName" class="form-input" placeholder="e.g. alex" required>
+                        <span class="form-hint">This is the name they'll type to unlock the story</span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="formDisplayName">Display Name</label>
+                        <input type="text" id="formDisplayName" class="form-input" placeholder="e.g. Alex" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="formGreeting">Greeting Message</label>
+                        <input type="text" id="formGreeting" class="form-input" placeholder="e.g. Welcome, Alex ✨">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="formSubtitle">Subtitle</label>
+                        <input type="text" id="formSubtitle" class="form-input" placeholder="e.g. This story was written just for you...">
+                    </div>
+
+                    <!-- Photo Management -->
+                    <div class="form-group">
+                        <label class="form-label">📸 Photos</label>
+                        <span class="form-hint">Add photo file paths or upload images from device</span>
+                        <div class="photos-list" id="photosListEditor">
+                            <!-- Dynamically populated -->
+                        </div>
+                        <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;">
+                            <label class="admin-add-photo-btn upload-btn" style="cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+                                <span>📁 Upload Image from Device</span>
+                                <input type="file" id="uploadPhotoInput" accept="image/*" multiple style="display:none;">
+                            </label>
+                            <button type="button" class="admin-add-photo-btn" id="addPhotoBtn">+ Add Image URL/Path</button>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="form-submit-btn" id="formSubmitBtn">
+                            <span>💾 Save Story</span>
+                        </button>
+                        <button type="button" class="form-cancel-btn" id="formCancelBtn">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Delete Confirmation Modal -->
+        <div class="admin-modal" id="deleteModal">
+            <div class="admin-modal-content">
+                <div class="modal-icon">⚠️</div>
+                <h3 class="modal-title">Delete Story?</h3>
+                <p class="modal-text">Are you sure you want to delete <strong id="deleteStoryName"></strong>'s story? This cannot be undone.</p>
+                <div class="modal-actions">
+                    <button class="modal-delete-btn" id="confirmDeleteBtn">🗑️ Delete</button>
+                    <button class="modal-cancel-btn" id="cancelDeleteBtn">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Notification -->
+        <div class="admin-toast" id="adminToast">
+            <span class="toast-icon" id="toastIcon">✅</span>
+            <span class="toast-text" id="toastText">Success!</span>
+        </div>
     </div>
-  </div>
-</section>
 
-<section class="scene" data-stop="3">
-  <div class="ticket">
-    <div class="ticket-visual sky-day" data-illustration="walking" aria-hidden="true"></div>
-    <div class="ticket-seamline"></div>
-    <div class="ticket-stub">
-      <span class="stop-label">Stop 03 · Walking Together</span>
-      <h2>Walking like we weren't strangers</h2>
-      <p>Ticket in hand, I waited for her. When she was done, we started walking — no plan, no particular hurry.</p>
-      <p>Just two strangers, walking like they weren't strangers at all.</p>
+    <!-- ===== MAIN STORY CONTAINER ===== -->
+    <div class="story-container" id="storyContainer">
+
+    <!-- User Top Navigation Bar -->
+    <header class="user-top-bar" id="userTopBar">
+        <div class="ut-user-info">
+            <span>Logged in as</span>
+            <span class="ut-badge" id="utUsername">Lemuria</span>
+        </div>
+        <div class="ut-actions">
+            <button class="ut-btn" id="utLogoutBtn">← Logout</button>
+        </div>
+    </header>
+
+    <!-- Floating particles -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Progress bar -->
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- Navigation dots -->
+    <nav class="nav-dots" id="navDots"></nav>
+
+    <!-- LEMURIA / FULL RAILWAY STORY WRAPPER -->
+    <div id="lemuriaStory">
+
+    <!-- ===== SCENE 0: HERO ===== -->
+    <section class="scene scene-hero" id="scene-0" data-title="The Beginning">
+        <div class="hero-bg">
+            <div class="stars"></div>
+            <div class="shooting-star"></div>
+            <div class="shooting-star s2"></div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-subtitle" id="heroSubtitleText">A story written by fate</div>
+            <h1 class="hero-title" id="heroTitleText">
+                <span class="line1">Where Strangers</span>
+                <span class="line2">Became</span>
+                <span class="line3 highlight">Something More</span>
+            </h1>
+            <p class="hero-tagline" id="heroTaglineText">A love story that began at a railway station</p>
+            <div class="scroll-indicator">
+                <span>Scroll to begin</span>
+                <div class="scroll-arrow">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 4v16m0 0l-6-6m6 6l6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+        <!-- Train silhouette at bottom -->
+        <div class="hero-train-silhouette">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M0 120 L0 80 L50 80 L50 40 L100 40 L100 30 L150 30 L150 40 L950 40 L950 30 L1000 30 L1000 40 L1050 40 L1050 80 L1200 80 L1200 120 Z" fill="rgba(255,255,255,0.03)"/>
+                <circle cx="120" cy="100" r="18" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="3"/>
+                <circle cx="300" cy="100" r="18" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="3"/>
+                <circle cx="500" cy="100" r="18" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="3"/>
+                <circle cx="700" cy="100" r="18" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="3"/>
+                <circle cx="900" cy="100" r="18" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="3"/>
+                <circle cx="1050" cy="100" r="18" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="3"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- ===== SCENE 1: THE RAILWAY STATION ===== -->
+    <section class="scene scene-station" id="scene-1" data-title="The Station">
+        <div class="scene-bg station-bg"></div>
+        <div class="scene-overlay"></div>
+        <div class="scene-content">
+            <div class="chapter-number">Chapter I</div>
+            <h2 class="scene-title">The Railway Station</h2>
+            <div class="story-text">
+                <p>It was just another ordinary day at the railway station. The crowd buzzing, announcements echoing through the halls, and the smell of chai lingering in the air.</p>
+                <p>I stood in the <em>ticket queue</em>, lost in my own world…</p>
+                <p class="accent-text">Until a voice broke through the noise.</p>
+            </div>
+        </div>
+        <!-- Animated station elements -->
+        <div class="station-platform">
+            <div class="platform-line"></div>
+            <div class="station-clock">
+                <div class="clock-face">
+                    <div class="clock-hand hour"></div>
+                    <div class="clock-hand minute"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SCENE 2: THE TICKET QUEUE ===== -->
+    <section class="scene scene-queue" id="scene-2" data-title="The First Words">
+        <div class="scene-bg queue-bg"></div>
+        <div class="scene-overlay"></div>
+        <div class="scene-content">
+            <div class="chapter-number">Chapter II</div>
+            <h2 class="scene-title">The First Words</h2>
+            <div class="dialogue-container">
+                <div class="dialogue her">
+                    <div class="dialogue-bubble">
+                        <span class="speaker">She</span>
+                        <p>"Excuse me… where can I get a ticket?"</p>
+                    </div>
+                    <div class="character-icon her-icon">
+                        <svg viewBox="0 0 60 60"><circle cx="30" cy="22" r="12" fill="currentColor"/><path d="M10 55 C10 38 50 38 50 55" fill="currentColor"/><path d="M18 18 Q30 2 42 18" fill="currentColor" opacity="0.7"/></svg>
+                    </div>
+                </div>
+                <div class="dialogue me">
+                    <div class="character-icon me-icon">
+                        <svg viewBox="0 0 60 60"><circle cx="30" cy="22" r="12" fill="currentColor"/><path d="M10 55 C10 38 50 38 50 55" fill="currentColor"/><rect x="22" y="10" width="16" height="6" rx="2" fill="currentColor" opacity="0.5"/></svg>
+                    </div>
+                    <div class="dialogue-bubble">
+                        <span class="speaker">Me</span>
+                        <p>"This is the line! You're in the right place."</p>
+                    </div>
+                </div>
+            </div>
+            <div class="story-text">
+                <p class="feeling-text">At first sight, something stirred inside me. A feeling I couldn't name. I brushed it off — <em>"Just imagination,"</em> I told myself.</p>
+            </div>
+        </div>
+        <!-- Queue people silhouettes -->
+        <div class="queue-people">
+            <div class="queue-person p1"></div>
+            <div class="queue-person p2"></div>
+            <div class="queue-person p3 highlight-person"></div>
+            <div class="queue-person p4 highlight-person-me"></div>
+            <div class="queue-person p5"></div>
+        </div>
+    </section>
+
+    <!-- ===== SCENE 3: WALKING TOGETHER ===== -->
+    <section class="scene scene-walk" id="scene-3" data-title="Walking Together">
+        <div class="scene-bg walk-bg"></div>
+        <div class="scene-overlay"></div>
+        <div class="scene-content">
+            <div class="chapter-number">Chapter III</div>
+            <h2 class="scene-title">Walking Together</h2>
+            <div class="story-text">
+                <p>After getting my ticket, I waited. <em>I don't know why.</em></p>
+                <p>Maybe I wanted just a few more moments. So we walked together — two strangers sharing the same path, the same platform, headed for the same train.</p>
+                <p class="accent-text">For a brief while, the world felt perfectly aligned.</p>
+            </div>
+        </div>
+        <!-- Walking characters animation -->
+        <div class="walking-scene">
+            <div class="ground"></div>
+            <div class="walking-pair" id="walkingPair">
+                <div class="walker walker-me">
+                    <div class="walker-head"></div>
+                    <div class="walker-body"></div>
+                    <div class="walker-legs">
+                        <div class="leg left"></div>
+                        <div class="leg right"></div>
+                    </div>
+                </div>
+                <div class="walker walker-her">
+                    <div class="walker-head"></div>
+                    <div class="walker-hair"></div>
+                    <div class="walker-body"></div>
+                    <div class="walker-legs">
+                        <div class="leg left"></div>
+                        <div class="leg right"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- Scenery items moving -->
+            <div class="scenery">
+                <div class="tree t1">🌳</div>
+                <div class="tree t2">🌳</div>
+                <div class="tree t3">🌴</div>
+                <div class="lamp l1">
+                    <div class="lamp-post"></div>
+                    <div class="lamp-light"></div>
+                </div>
+                <div class="lamp l2">
+                    <div class="lamp-post"></div>
+                    <div class="lamp-light"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SCENE 4: THE SEPARATION ===== -->
+    <section class="scene scene-separate" id="scene-4" data-title="Separated">
+        <div class="scene-bg separate-bg"></div>
+        <div class="scene-overlay"></div>
+        <div class="scene-content">
+            <div class="chapter-number">Chapter IV</div>
+            <h2 class="scene-title">The Separation</h2>
+            <div class="story-text">
+                <p>Then came the fork in the path. We went in <em>separate directions</em> — but to the same train.</p>
+                <p>As she walked away, the realization hit me like a wave.</p>
+            </div>
+            <div class="realization-box">
+                <div class="heartbeat-line">
+                    <svg viewBox="0 0 400 80" class="heartbeat-svg">
+                        <polyline points="0,40 50,40 70,40 80,10 90,70 100,40 120,40 140,40 160,40 170,10 180,70 190,40 210,40 250,40 260,10 270,70 280,40 300,40 350,40 400,40" 
+                                fill="none" stroke="var(--rose)" stroke-width="2.5" class="heartbeat-path"/>
+                    </svg>
+                </div>
+                <p class="realization-text">"This feeling… it's not ordinary. It's something <strong>special</strong>."</p>
+                <p class="sub-realization">But she was already gone.</p>
+            </div>
+        </div>
+        <!-- Splitting paths animation -->
+        <div class="split-paths">
+            <div class="path-left">
+                <div class="mini-walker going-left">
+                    <div class="mw-head"></div>
+                    <div class="mw-body"></div>
+                </div>
+            </div>
+            <div class="path-center">
+                <div class="fork-point">💔</div>
+            </div>
+            <div class="path-right">
+                <div class="mini-walker going-right">
+                    <div class="mw-head"></div>
+                    <div class="mw-body her-style"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SCENE 5: MADMAN MOMENT ===== -->
+    <section class="scene scene-madman" id="scene-5" data-title="The Madman">
+        <div class="scene-bg madman-bg"></div>
+        <div class="scene-overlay dark-overlay"></div>
+        <div class="scene-content">
+            <div class="chapter-number">Chapter V</div>
+            <h2 class="scene-title glitch-text">Lost in Frustration</h2>
+            <div class="story-text">
+                <p>Standing there, watching her disappear into the crowd, I must have looked like a <em>madman</em>.</p>
+                <p>Heart racing. Thoughts spiraling. The chance — slipping away.</p>
+            </div>
+            <div class="madman-visual">
+                <div class="thought-bubbles">
+                    <span class="thought t1">Why didn't I ask?</span>
+                    <span class="thought t2">She's gone...</span>
+                    <span class="thought t3">What if...</span>
+                    <span class="thought t4">I should have...</span>
+                    <span class="thought t5">No, wait—</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SCENE 6: SHE CAME BACK ===== -->
+    <section class="scene scene-return" id="scene-6" data-title="She Returned">
+        <div class="scene-bg return-bg"></div>
+        <div class="scene-overlay golden-overlay"></div>
+        <div class="scene-content">
+            <div class="chapter-number">Chapter VI</div>
+            <h2 class="scene-title golden-title">The Voice From Behind</h2>
+            <div class="story-text">
+                <p>But then — suddenly —</p>
+            </div>
+            <div class="voice-echo-container">
+                <div class="voice-echo v1">Hey!</div>
+                <div class="voice-echo v2">Hey!</div>
+                <div class="voice-echo v3">Hey!</div>
+                <div class="voice-echo v4">Hey!</div>
+            </div>
+            <div class="story-text mt-story">
+                <p>I turned around. And there she was. She had come to <em>my side</em>.</p>
+                <p class="golden-accent">Her voice echoed not just in my ears… but in my heart.</p>
+            </div>
+            <div class="heart-pulse-ring">
+                <div class="pulse-ring r1"></div>
+                <div class="pulse-ring r2"></div>
+                <div class="pulse-ring r3"></div>
+                <div class="heart-center">❤️</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SCENE 7: GRANDMA'S CALL ===== -->
+    <section class="scene scene-call" id="scene-7" data-title="The Phone Call">
+        <div class="scene-bg call-bg"></div>
+        <div class="scene-overlay"></div>
+        <div class="scene-content">
+            <div class="chapter-number">Chapter VII</div>
+            <h2 class="scene-title">The Phone Call</h2>
+            <div class="story-text">
+                <p>We walked a few more precious steps together. Then her phone rang.</p>
+                <p><em>Grandma.</em></p>
+                <p>She learned she had been walking in the <strong>opposite direction</strong> all along.</p>
+            </div>
+            <div class="phone-animation">
+                <div class="phone-ring">
+                    <div class="phone-icon">📱</div>
+                    <div class="ring-wave w1"></div>
+                    <div class="ring-wave w2"></div>
+                    <div class="ring-wave w3"></div>
+                </div>
+                <div class="caller-id">Grandma ❤️</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SCENE 8: ASKING INSTA ===== -->
+    <section class="scene scene-insta" id="scene-8" data-title="The Courage">
+        <div class="scene-bg insta-bg"></div>
+        <div class="scene-overlay"></div>
+        <div class="scene-content">
+            <div class="chapter-number">Chapter VIII</div>
+            <h2 class="scene-title">Collecting Courage</h2>
+            <div class="story-text">
+                <p>Before she could leave, I gathered every ounce of courage I had…</p>
+            </div>
+            <div class="courage-meter">
+                <div class="meter-label">Courage Level</div>
+                <div class="meter-bar">
+                    <div class="meter-fill" id="courageFill"></div>
+                </div>
+                <div class="meter-text">Building up...</div>
+            </div>
+            <div class="dialogue-container compact">
+                <div class="dialogue me">
+                    <div class="dialogue-bubble">
+                        <span class="speaker">Me</span>
+                        <p>"Can I get your Instagram ID?"</p>
+                    </div>
+                </div>
+                <div class="dialogue her">
+                    <div class="dialogue-bubble">
+                        <span class="speaker">She</span>
+                        <p>✨ <em>*gives her ID*</em> ✨</p>
+                    </div>
+                </div>
+                <div class="dialogue me">
+                    <div class="dialogue-bubble">
+                        <span class="speaker">Me</span>
+                        <p>"What's your name?"</p>
+                    </div>
+                </div>
+                <div class="dialogue her">
+                    <div class="dialogue-bubble">
+                        <span class="speaker">She</span>
+                        <p>"It's Lemuria. Spell it correctly!"</p>
+                    </div>
+                </div>
+                <div class="dialogue me">
+                    <div class="dialogue-bubble">
+                        <span class="speaker">Me</span>
+                        <p>*tries to spell... fails* 😅</p>
+                    </div>
+                </div>
+            </div>
+            <div class="story-text">
+                <p class="accent-text">"Anyway… I have Instagram. I'll spell it right there."</p>
+            </div>
+            <!-- Instagram card animation -->
+            <div class="insta-card">
+                <div class="insta-header">
+                    <div class="insta-logo">
+                        <svg viewBox="0 0 24 24" width="24" height="24"><rect x="2" y="2" width="20" height="20" rx="5" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="18" cy="6" r="1.2" fill="currentColor"/></svg>
+                    </div>
+                    <span>Instagram</span>
+                </div>
+                <div class="insta-search">
+                    <div class="search-typing" id="searchTyping">Searching...</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SCENE 9: WRONG DIRECTION ===== -->
+    <section class="scene scene-wrong" id="scene-9" data-title="Wrong Direction">
+        <div class="scene-bg wrong-bg"></div>
+        <div class="scene-overlay"></div>
+        <div class="scene-content">
+            <div class="chapter-number">Chapter IX</div>
+            <h2 class="scene-title">Wrong Direction</h2>
+            <div class="story-text">
+                <p>I searched for my friends — all <strong>9 of them</strong> — nowhere to be found.</p>
+                <p>A quick phone call confirmed my fear:</p>
+            </div>
+            <div class="call-bubble">
+                <div class="call-icon">📞</div>
+                <p>"Bro… you're also going in the <strong>wrong direction!</strong>"</p>
+            </div>
+            <div class="story-text">
+                <p class="accent-text">I ran. Ran as fast as I could. I had to find her before she disappeared into her family.</p>
+            </div>
+        </div>
+        <!-- Running animation -->
+        <div class="running-scene">
+            <div class="runner" id="runner">
+                <div class="runner-body">
+                    <div class="runner-head"></div>
+                    <div class="runner-torso"></div>
+                    <div class="runner-legs">
+                        <div class="r-leg left"></div>
+                        <div class="r-leg right"></div>
+                    </div>
+                </div>
+                <div class="dust-particles">
+                    <span class="dust d1"></span>
+                    <span class="dust d2"></span>
+                    <span class="dust d3"></span>
+                </div>
+            </div>
+            <div class="speed-lines">
+                <div class="speed-line sl1"></div>
+                <div class="speed-line sl2"></div>
+                <div class="speed-line sl3"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SCENE 10: FOUND HER AGAIN ===== -->
+    <section class="scene scene-found" id="scene-10" data-title="Found Again">
+        <div class="scene-bg found-bg"></div>
+        <div class="scene-overlay golden-overlay"></div>
+        <div class="scene-content">
+            <div class="chapter-number">Chapter X</div>
+            <h2 class="scene-title golden-title">Found You</h2>
+            <div class="story-text">
+                <p><strong>Luckily</strong> — I found her.</p>
+            </div>
+            <div class="dialogue-container compact">
+                <div class="dialogue her">
+                    <div class="dialogue-bubble">
+                        <span class="speaker">She</span>
+                        <p>"What happened?"</p>
+                    </div>
+                </div>
+                <div class="dialogue me">
+                    <div class="dialogue-bubble">
+                        <span class="speaker">Me</span>
+                        <p>"Turns out I was also in the wrong direction… because of our conversation 😄"</p>
+                    </div>
+                </div>
+                <div class="dialogue her">
+                    <div class="dialogue-bubble">
+                        <span class="speaker">She</span>
+                        <p>"Haha! What's your coach number?"</p>
+                    </div>
+                </div>
+            </div>
+            <div class="story-text">
+                <p>She went with her family. And just like that… we <em>silently separated</em> again.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SCENE 11: THE TRAIN ===== -->
+    <section class="scene scene-train" id="scene-11" data-title="The Train">
+        <div class="scene-bg train-bg"></div>
+        <div class="scene-overlay"></div>
+        <div class="train-animation-container">
+            <div class="moving-train" id="movingTrain">
+                <div class="train-engine">
+                    <div class="engine-body">
+                        <div class="engine-window"></div>
+                        <div class="engine-front"></div>
+                        <div class="smoke-stack">
+                            <div class="smoke s1"></div>
+                            <div class="smoke s2"></div>
+                            <div class="smoke s3"></div>
+                        </div>
+                    </div>
+                    <div class="engine-wheels">
+                        <div class="wheel big"></div>
+                        <div class="wheel big w2"></div>
+                        <div class="wheel small"></div>
+                    </div>
+                </div>
+                <div class="train-coach c1">
+                    <div class="coach-body">
+                        <div class="coach-window"></div>
+                        <div class="coach-window"></div>
+                        <div class="coach-window"></div>
+                    </div>
+                    <div class="coach-wheels">
+                        <div class="wheel"></div>
+                        <div class="wheel"></div>
+                    </div>
+                </div>
+                <div class="train-coach c2">
+                    <div class="coach-body">
+                        <div class="coach-window"></div>
+                        <div class="coach-window highlight-window"></div>
+                        <div class="coach-window"></div>
+                    </div>
+                    <div class="coach-wheels">
+                        <div class="wheel"></div>
+                        <div class="wheel"></div>
+                    </div>
+                </div>
+                <div class="train-coach c3">
+                    <div class="coach-body">
+                        <div class="coach-window highlight-window"></div>
+                        <div class="coach-window"></div>
+                        <div class="coach-window"></div>
+                    </div>
+                    <div class="coach-wheels">
+                        <div class="wheel"></div>
+                        <div class="wheel"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="train-tracks">
+                <div class="track-line"></div>
+                <div class="sleepers">
+                    <span></span><span></span><span></span><span></span><span></span>
+                    <span></span><span></span><span></span><span></span><span></span>
+                    <span></span><span></span><span></span><span></span><span></span>
+                    <span></span><span></span><span></span><span></span><span></span>
+                </div>
+            </div>
+        </div>
+        <div class="scene-content train-story-content">
+            <div class="chapter-number">Chapter XI</div>
+            <h2 class="scene-title">On The Train</h2>
+            <div class="story-text">
+                <p>I found my seat. The train began to move.</p>
+                <p>And the <strong>very first thing</strong> I did?</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SCENE 12: THE FOLLOW ===== -->
+    <section class="scene scene-follow" id="scene-12" data-title="The Follow">
+        <div class="scene-bg follow-bg"></div>
+        <div class="scene-overlay"></div>
+        <div class="scene-content">
+            <div class="chapter-number">Chapter XII</div>
+            <h2 class="scene-title">The Follow</h2>
+            <div class="follow-phone-screen">
+                <div class="phone-frame">
+                    <div class="phone-notch"></div>
+                    <div class="phone-screen-content">
+                        <div class="insta-profile">
+                            <div class="profile-pic">
+                                <div class="gradient-ring"></div>
+                                <div class="profile-avatar">👩</div>
+                            </div>
+                            <div class="profile-stats">
+                                <div class="stat"><strong>—</strong><span>posts</span></div>
+                                <div class="stat"><strong>—</strong><span>followers</span></div>
+                                <div class="stat"><strong>—</strong><span>following</span></div>
+                            </div>
+                        </div>
+                        <div class="follow-btn" id="followBtn">
+                            <span class="follow-text">Follow</span>
+                        </div>
+                        <div class="follow-done" id="followDone">
+                            <span>✓ Following</span>
+                        </div>
+                        <div class="chat-preview">
+                            <div class="chat-msg sent">Hey! It's me from the station 😊</div>
+                            <div class="chat-msg received typing-indicator">
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="story-text">
+                <p>Followed her. Started chatting.</p>
+                <p class="accent-text">But to get a follow back… I knew I had to do something <strong>unique</strong>. Something that would make her remember the stranger from the railway station.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SCENE 13: THE ENDING ===== -->
+    <section class="scene scene-ending" id="scene-13" data-title="To Be Continued">
+        <div class="scene-bg ending-bg">
+            <div class="stars"></div>
+        </div>
+        <div class="scene-overlay"></div>
+        <div class="scene-content ending-content">
+            <div class="ending-heart">
+                <div class="big-heart">❤️</div>
+            </div>
+            <h2 class="ending-title">So I Built This</h2>
+            <p class="ending-subtitle">A website. For us. For our story.</p>
+            <div class="ending-quote">
+                <p>"Some people cross your path for a reason.<br>Some meetings are written in the stars.<br>And some strangers… are meant to become <strong>something more</strong>."</p>
+            </div>
+            <div class="to-be-continued">
+                <span class="tbc-line"></span>
+                <span class="tbc-text">To be continued...</span>
+                <span class="tbc-line"></span>
+            </div>
+            <div class="ending-train">
+                <div class="tiny-train">🚂</div>
+                <div class="tiny-track"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== PHOTO GALLERY SECTION ===== -->
+    <section class="scene scene-gallery" id="scene-gallery" data-title="Our Memories">
+        <div class="scene-bg gallery-bg"></div>
+        <div class="scene-overlay"></div>
+        <div class="scene-content gallery-content">
+            <div class="chapter-number">Our Memories</div>
+            <h2 class="scene-title gallery-title">Photo Gallery</h2>
+            <p class="gallery-subtitle">Moments frozen in time, forever in our hearts</p>
+            <div class="gallery-grid" id="galleryGrid">
+                <!-- Photos will be dynamically inserted here -->
+                <div class="gallery-empty" id="galleryEmpty">
+                    <span class="ge-icon">📸</span>
+                    <p>Photos will appear here once added</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    </div><!-- end #lemuriaStory -->
+
+    <!-- PHOTO LIGHTBOX -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" id="lightboxClose">✕</button>
+        <button class="lightbox-prev" id="lightboxPrev">‹</button>
+        <button class="lightbox-next" id="lightboxNext">›</button>
+        <div class="lightbox-content">
+            <img id="lightboxImg" src="" alt="">
+            <p class="lightbox-caption" id="lightboxCaption"></p>
+        </div>
     </div>
-  </div>
-</section>
 
-<section class="scene" data-stop="4">
-  <div class="ticket">
-    <div class="ticket-visual sky-warm" data-illustration="separate" aria-hidden="true"></div>
-    <div class="ticket-seamline"></div>
-    <div class="ticket-stub">
-      <span class="stop-label">Stop 04 · Opposite Directions</span>
-      <h2>Same train, opposite ends</h2>
-      <p>Same train, it turned out — but our coaches sat on opposite ends of the platform.</p>
-      <p>We said something like goodbye, and turned to go our separate ways.</p>
-    </div>
-  </div>
-</section>
+    </div><!-- end .story-container -->
 
-<section class="scene" data-stop="5">
-  <div class="ticket">
-    <div class="ticket-visual sky-warm" data-illustration="realization" aria-hidden="true"></div>
-    <div class="ticket-seamline"></div>
-    <div class="ticket-stub">
-      <span class="stop-label">Stop 05 · The Realization</span>
-      <h2>I understood a second too late</h2>
-      <p>The second she was out of sight, it hit me. That feeling wasn't ordinary — it was rare.</p>
-      <p>And it was already gone. I must have looked half out of my mind, standing there replaying the last ten minutes.</p>
-    </div>
-  </div>
-</section>
-
-<section class="scene" data-stop="6">
-  <div class="ticket">
-    <div class="ticket-visual sky-warm" data-illustration="voice" aria-hidden="true"></div>
-    <div class="ticket-seamline"></div>
-    <div class="ticket-stub">
-      <span class="stop-label">Stop 06 · Her Voice</span>
-      <h2>Then I heard her voice</h2>
-      <p>Then — her voice, behind me. I turned around, and she was walking back. Toward me, not away.</p>
-      <p>I don't think I've stopped hearing that voice since.</p>
-    </div>
-  </div>
-</section>
-
-<section class="scene" data-stop="7">
-  <div class="ticket">
-    <div class="ticket-visual sky-warm" data-illustration="call" aria-hidden="true"></div>
-    <div class="ticket-seamline"></div>
-    <div class="ticket-stub">
-      <span class="stop-label">Stop 07 · Grandma's Call</span>
-      <h2>A call from her grandmother</h2>
-      <p>We fell into step again. A few paces in, her phone rang — her grandmother.</p>
-      <p>When the call ended, she realized something: she'd been walking the wrong way the whole time, even before we'd met.</p>
-    </div>
-  </div>
-</section>
-
-<section class="scene" data-stop="8">
-  <div class="ticket">
-    <div class="ticket-visual sky-gold" data-illustration="courage" aria-hidden="true"></div>
-    <div class="ticket-seamline"></div>
-    <div class="ticket-stub">
-      <span class="stop-label">Stop 08 · The Courage</span>
-      <h2>Whatever courage I had</h2>
-      <p>Before she could leave again, I found whatever courage I had and asked for her Instagram. She gave it to me.</p>
-      <p>Then she told me her name — and challenged me to spell it correctly. I tried. I failed. Instagram, at least, would teach me properly.</p>
-    </div>
-  </div>
-</section>
-
-<section class="scene" data-stop="9">
-  <div class="ticket">
-    <div class="ticket-visual sky-gold" data-illustration="friends" aria-hidden="true"></div>
-    <div class="ticket-seamline"></div>
-    <div class="ticket-stub">
-      <span class="stop-label">Stop 09 · Nine Friends, Zero Matches</span>
-      <h2>Not one of them knew her</h2>
-      <p>Phone still in hand, I checked every mutual connection I could think of — nine friends in total.</p>
-      <p>Not one of them knew her. Not one.</p>
-    </div>
-  </div>
-</section>
-
-<section class="scene" data-stop="10">
-  <div class="ticket">
-    <div class="ticket-visual sky-gold" data-illustration="mirror" aria-hidden="true"></div>
-    <div class="ticket-seamline"></div>
-    <div class="ticket-stub">
-      <span class="stop-label">Stop 10 · The Mirrored Mistake</span>
-      <h2>I'd been going the wrong way too</h2>
-      <p>I called a friend, half-distracted — and that's when I realized it.</p>
-      <p>I'd been walking the wrong way too. Just like her. Neither of us had been looking where we were going.</p>
-    </div>
-  </div>
-</section>
-
-<section class="scene" data-stop="11">
-  <div class="ticket">
-    <div class="ticket-visual sky-gold" data-illustration="chase" aria-hidden="true"></div>
-    <div class="ticket-seamline"></div>
-    <div class="ticket-stub">
-      <span class="stop-label">Stop 11 · The Chase</span>
-      <h2>Running before she was gone</h2>
-      <p>Her family was close by, and once she reached them, this would be over. So I ran.</p>
-      <p>I found her. &ldquo;What happened?&rdquo; she asked, casual, like nothing was at stake. &ldquo;Wrong direction,&rdquo; I said. &ldquo;Same as you. I think we were both too busy talking to notice.&rdquo;</p>
-    </div>
-  </div>
-</section>
-
-<section class="scene" data-stop="12">
-  <div class="ticket">
-    <div class="ticket-visual sky-gold" data-illustration="coach" aria-hidden="true"></div>
-    <div class="ticket-seamline"></div>
-    <div class="ticket-stub">
-      <span class="stop-label">Stop 12 · The Coach Number</span>
-      <h2>One last small thing to ask</h2>
-      <p>She asked which coach I'd be in — one last small thing to hold onto — then turned and went with her family.</p>
-      <p>We parted quietly, without a word that felt big enough for what had just happened.</p>
-    </div>
-  </div>
-</section>
-
-<section class="scene" data-stop="13">
-  <div class="ticket">
-    <div class="ticket-visual sky-dusk" data-illustration="board" aria-hidden="true"></div>
-    <div class="ticket-seamline"></div>
-    <div class="ticket-stub">
-      <span class="stop-label">Stop 13 · On Board</span>
-      <h2>Before my bag was even down</h2>
-      <p>I found my seat, and before anything else, I found her account and followed it.</p>
-      <p>Then I started typing.</p>
-    </div>
-  </div>
-</section>
-
-<section class="scene finale" data-stop="14">
-  <div class="ticket">
-    <div class="ticket-visual sky-dusk" data-illustration="finale" aria-hidden="true"></div>
-    <div class="ticket-seamline"></div>
-    <div class="ticket-stub">
-      <span class="stop-label">Stop 14 · To Be Continued</span>
-      <h2>The train was already moving</h2>
-      <p>If I want a follow back, I know what I have to do: something unmistakably me.</p>
-      <p>The train was already moving. So, it turns out, was I.</p>
-      <span class="tap-hint">(tap this ticket for good luck)</span>
-    </div>
-  </div>
-</section>
-
-<footer>A small true story — still being written.</footer>
-
-<script>
-const COLORS = {
-  a:'#14324A', aDeep:'#0B2131',
-  b:'#7A3B33', bDeep:'#5A2A24',
-  skin:'#E7BE92',
-  hairA:'#2A2420', hairB:'#211815',
-  marigold:'#DE9F35', marigoldSoft:'#EFC978',
-  ink:'#221E18'
-};
-
-function svgWrap(inner, vb){
-  return '<svg viewBox="' + (vb || '0 0 400 300') + '" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' + inner + '</svg>';
-}
-
-function groundAndLamp(){
-  return '\
-    <rect x="0" y="256" width="400" height="6" fill="' + COLORS.marigold + '" opacity="0.55"/>\
-    <rect x="0" y="262" width="400" height="16" fill="' + COLORS.ink + '" opacity="0.55"/>\
-    <rect x="26" y="150" width="5" height="112" fill="' + COLORS.aDeep + '"/>\
-    <circle cx="28.5" cy="146" r="11" fill="' + COLORS.marigoldSoft + '"/>';
-}
-
-function person(variant, moveClass){
-  moveClass = moveClass || '';
-  const body = variant==='a' ? COLORS.a : COLORS.b;
-  const bodyDeep = variant==='a' ? COLORS.aDeep : COLORS.bDeep;
-  const hair = variant==='a'
-    ? '<path d="M12 9 Q25 -5 38 9" stroke="' + COLORS.hairA + '" stroke-width="6" fill="none" stroke-linecap="round"/>'
-    : '<circle cx="25" cy="6" r="6" fill="' + COLORS.hairB + '"/>';
-  return '<g class="person ' + moveClass + '">\
-    <g class="bodybob">\
-      <circle cx="25" cy="16" r="13" fill="' + COLORS.skin + '"/>\
-      ' + hair + '\
-      <rect x="12" y="28" width="26" height="30" rx="11" fill="' + body + '"/>\
-      <rect x="5" y="30" width="8" height="22" rx="4" fill="' + body + '"/>\
-      <rect x="37" y="30" width="8" height="22" rx="4" fill="' + body + '"/>\
-      <rect class="leg-l" x="14" y="58" width="9" height="24" rx="4" fill="' + bodyDeep + '"/>\
-      <rect class="leg-r" x="27" y="58" width="9" height="24" rx="4" fill="' + bodyDeep + '"/>\
-    </g>\
-  </g>';
-}
-
-function personAt(x,y,variant,moveClass){
-  return '<g transform="translate(' + x + ',' + y + ')">' + person(variant,moveClass) + '</g>';
-}
-
-function bubble(text){
-  const width = Math.max(90, text.length*6.5+24);
-  return '<g class="bubble">\
-    <rect x="0" y="0" width="' + width + '" height="34" rx="12" fill="#fff" stroke="' + COLORS.ink + '" stroke-opacity="0.15"/>\
-    <text x="' + (width/2) + '" y="21" font-size="12" text-anchor="middle" fill="' + COLORS.ink + '">' + text + '</text>\
-  </g>';
-}
-
-function arrowSign(dir){
-  const flip = dir==='left' ? 'scale(-1,1)' : '';
-  return '<g transform="' + flip + '">\
-    <rect x="-22" y="-14" width="44" height="28" rx="6" fill="' + COLORS.aDeep + '" opacity="0.85"/>\
-    <path d="M-10 0 L6 -8 L6 -3 L14 -3 L14 3 L6 3 L6 8 Z" fill="' + COLORS.marigoldSoft + '"/>\
-  </g>';
-}
-
-function phoneIcon(){
-  return '<rect x="-8" y="-14" width="16" height="28" rx="4" fill="' + COLORS.ink + '"/><rect x="-6" y="-10" width="12" height="18" rx="1" fill="' + COLORS.marigoldSoft + '"/>';
-}
-
-function handleCard(){
-  return '\
-    <rect x="-26" y="-16" width="52" height="32" rx="8" fill="#fff" stroke="' + COLORS.ink + '" stroke-opacity="0.15"/>\
-    <circle cx="-10" cy="0" r="8" fill="' + COLORS.marigold + '"/>\
-    <rect x="4" y="-6" width="18" height="4" rx="2" fill="' + COLORS.ink + '" opacity="0.4"/>\
-    <rect x="4" y="2" width="14" height="4" rx="2" fill="' + COLORS.ink + '" opacity="0.25"/>';
-}
-
-function spellingBlocks(){
-  let out = '';
-  for(let i=0;i<5;i++){
-    out += '<rect x="' + (i*16) + '" y="0" width="12" height="16" rx="3" fill="' + (i===2?COLORS.b:'#fff') + '" stroke="' + COLORS.ink + '" stroke-opacity="0.2"/>';
-  }
-  return '<g>' + out + '</g>';
-}
-
-function familyCluster(x,y){
-  return '<g transform="translate(' + x + ',' + y + ')">\
-    <circle cx="0" cy="0" r="10" fill="' + COLORS.bDeep + '" opacity="0.7"/>\
-    <circle cx="18" cy="4" r="9" fill="' + COLORS.aDeep + '" opacity="0.6"/>\
-    <circle cx="-14" cy="6" r="8" fill="' + COLORS.bDeep + '" opacity="0.5"/>\
-  </g>';
-}
-
-function speedLines(){
-  return '\
-    <line x1="0" y1="0" x2="-20" y2="0" stroke="' + COLORS.ink + '" stroke-opacity="0.35" stroke-width="3" stroke-linecap="round"/>\
-    <line x1="0" y1="14" x2="-16" y2="14" stroke="' + COLORS.ink + '" stroke-opacity="0.25" stroke-width="3" stroke-linecap="round"/>';
-}
-
-function soundWave(){
-  return '\
-    <path d="M0 -10 Q 10 0 0 10" stroke="' + COLORS.marigold + '" stroke-width="3" fill="none" stroke-linecap="round"/>\
-    <path d="M8 -16 Q 22 0 8 16" stroke="' + COLORS.marigold + '" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.7"/>';
-}
-
-function coachPlacard(){
-  return '\
-    <rect x="-20" y="-15" width="40" height="30" rx="6" fill="' + COLORS.marigoldSoft + '" stroke="' + COLORS.ink + '" stroke-opacity="0.2"/>\
-    <rect x="-12" y="-6" width="24" height="12" rx="3" fill="' + COLORS.aDeep + '"/>\
-    <circle cx="-6" cy="8" r="3" fill="' + COLORS.ink + '" opacity="0.4"/>\
-    <circle cx="6" cy="8" r="3" fill="' + COLORS.ink + '" opacity="0.4"/>';
-}
-
-function trainMarkup(){
-  return '\
-    <rect x="8" y="12" width="12" height="10" rx="2" fill="' + COLORS.aDeep + '"/>\
-    <rect x="0" y="20" width="70" height="50" rx="14" fill="' + COLORS.aDeep + '"/>\
-    <rect x="66" y="30" width="58" height="40" rx="8" fill="' + COLORS.a + '"/>\
-    <rect x="130" y="30" width="58" height="40" rx="8" fill="' + COLORS.a + '"/>\
-    <rect x="194" y="30" width="58" height="40" rx="8" fill="' + COLORS.a + '"/>\
-    <rect x="16" y="34" width="18" height="16" rx="3" fill="' + COLORS.marigoldSoft + '"/>\
-    <rect x="80" y="40" width="14" height="14" rx="2" fill="' + COLORS.marigoldSoft + '"/>\
-    <rect x="100" y="40" width="14" height="14" rx="2" fill="' + COLORS.marigoldSoft + '"/>\
-    <rect x="144" y="40" width="14" height="14" rx="2" fill="' + COLORS.marigoldSoft + '"/>\
-    <rect x="164" y="40" width="14" height="14" rx="2" fill="' + COLORS.marigoldSoft + '"/>\
-    <rect x="208" y="40" width="14" height="14" rx="2" fill="' + COLORS.marigoldSoft + '"/>\
-    <rect x="228" y="40" width="14" height="14" rx="2" fill="' + COLORS.marigoldSoft + '"/>\
-    <circle cx="18" cy="72" r="8" fill="' + COLORS.aDeep + '"/>\
-    <circle cx="50" cy="72" r="8" fill="' + COLORS.aDeep + '"/>\
-    <circle cx="86" cy="72" r="8" fill="' + COLORS.aDeep + '"/>\
-    <circle cx="118" cy="72" r="8" fill="' + COLORS.aDeep + '"/>\
-    <circle cx="150" cy="72" r="8" fill="' + COLORS.aDeep + '"/>\
-    <circle cx="182" cy="72" r="8" fill="' + COLORS.aDeep + '"/>\
-    <circle cx="214" cy="72" r="8" fill="' + COLORS.aDeep + '"/>\
-    <circle cx="246" cy="72" r="8" fill="' + COLORS.aDeep + '"/>\
-    <circle class="smoke" cx="12" cy="10" r="6" fill="#fff" opacity="0"/>\
-    <circle class="smoke" cx="16" cy="2" r="8" fill="#fff" opacity="0" style="animation-delay:.8s"/>\
-    <circle class="smoke" cx="8" cy="-6" r="5" fill="#fff" opacity="0" style="animation-delay:1.5s"/>';
-}
-
-function illusHero(){
-  return '<svg viewBox="0 0 800 190" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">\
-    <rect x="0" y="150" width="800" height="4" fill="' + COLORS.aDeep + '" opacity="0.2"/>\
-    <g transform="translate(0,60)"><g class="train-loop">' + trainMarkup() + '</g></g>\
-  </svg>';
-}
-
-function illusQueue(){
-  return svgWrap(groundAndLamp() +
-    '<rect x="290" y="130" width="70" height="90" rx="6" fill="' + COLORS.aDeep + '" opacity="0.85"/>' +
-    '<rect x="303" y="150" width="44" height="24" rx="3" fill="' + COLORS.marigoldSoft + '"/>' +
-    personAt(215,170,'a') +
-    personAt(80,170,'b') +
-    '<g transform="translate(56,116)">' + bubble("Which line for tickets?") + '</g>' +
-    '<g transform="translate(190,96)">' + bubble("This one.") + '</g>'
-  );
-}
-
-function illusFeeling(){
-  return svgWrap(groundAndLamp() +
-    personAt(150,170,'a') +
-    personAt(210,170,'b') +
-    '<g class="spark" transform="translate(180,90)"><path d="M0 -14 L4 -4 L14 0 L4 4 L0 14 L-4 4 L-14 0 L-4 -4 Z" fill="' + COLORS.marigold + '"/></g>'
-  );
-}
-
-function illusWalking(){
-  return svgWrap(groundAndLamp() +
-    '<g class="ground-scroll"><line x1="-40" y1="266" x2="440" y2="266" stroke="' + COLORS.ink + '" stroke-opacity="0.4" stroke-width="4" stroke-dasharray="10 18"/></g>' +
-    personAt(158,170,'a') +
-    personAt(218,170,'b')
-  );
-}
-
-function illusSeparate(){
-  return svgWrap(groundAndLamp() +
-    personAt(165,170,'a','move-left') +
-    personAt(215,170,'b','move-right') +
-    '<g transform="translate(90,55)">' + arrowSign('left') + '</g>' +
-    '<g transform="translate(290,55)">' + arrowSign('right') + '</g>'
-  );
-}
-
-function illusRealization(){
-  return svgWrap(groundAndLamp() +
-    personAt(175,170,'a') +
-    '<g class="spark" transform="translate(212,80)"><path d="M-10 0 Q -4 -10 2 0 Q 8 10 14 0" stroke="' + COLORS.b + '" stroke-width="3" fill="none" stroke-linecap="round"/></g>'
-  );
-}
-
-function illusVoice(){
-  return svgWrap(groundAndLamp() +
-    personAt(165,170,'a') +
-    personAt(225,170,'b','move-back') +
-    '<g class="spark" transform="translate(148,112)">' + soundWave() + '</g>'
-  );
-}
-
-function illusCall(){
-  return svgWrap(groundAndLamp() +
-    '<g class="ground-scroll"><line x1="-40" y1="266" x2="440" y2="266" stroke="' + COLORS.ink + '" stroke-opacity="0.4" stroke-width="4" stroke-dasharray="10 18"/></g>' +
-    personAt(158,170,'a') +
-    personAt(218,170,'b') +
-    '<g class="phone-ring" transform="translate(250,150)">' + phoneIcon() + '</g>'
-  );
-}
-
-function illusCourage(){
-  return svgWrap(groundAndLamp() +
-    personAt(140,170,'a') +
-    personAt(215,170,'b') +
-    '<g transform="translate(160,100)">' + handleCard() + '</g>' +
-    '<g transform="translate(228,58)">' + spellingBlocks() + '</g>'
-  );
-}
-
-function illusFriends(){
-  let avatars = '';
-  for(let i=0;i<9;i++){
-    const col = i%3, row = Math.floor(i/3);
-    const x = 140+col*45, y = 68+row*45;
-    avatars += '<circle class="avatar" cx="' + x + '" cy="' + y + '" r="15" fill="' + COLORS.a + '" style="animation-delay:' + (i*0.15).toFixed(2) + 's"/>';
-  }
-  return svgWrap(groundAndLamp() + personAt(280,170,'a') + avatars);
-}
-
-function illusMirror(){
-  return svgWrap(groundAndLamp() +
-    personAt(160,170,'a') +
-    '<g class="phone-ring" transform="translate(128,142)">' + phoneIcon() + '</g>' +
-    '<g transform="translate(255,88)">' + arrowSign('right') + '</g>' +
-    '<g class="spark" transform="translate(210,78)"><path d="M0 -14 L4 -4 L14 0 L4 4 L0 14 L-4 4 L-14 0 L-4 -4 Z" fill="' + COLORS.b + '"/></g>'
-  );
-}
-
-function illusChase(){
-  return svgWrap(groundAndLamp() +
-    personAt(60,170,'a','run move-run') +
-    '<g transform="translate(38,152)">' + speedLines() + '</g>' +
-    personAt(260,170,'b') +
-    familyCluster(340,190)
-  );
-}
-
-function illusCoach(){
-  return svgWrap(groundAndLamp() +
-    personAt(140,170,'a') +
-    personAt(205,170,'b','move-right') +
-    '<g transform="translate(175,108)">' + coachPlacard() + '</g>' +
-    familyCluster(340,190)
-  );
-}
-
-function illusBoard(){
-  return svgWrap(
-    '<rect x="30" y="40" width="340" height="230" rx="20" fill="' + COLORS.a + '" opacity="0.12"/>' +
-    '<rect x="55" y="55" width="290" height="130" rx="16" fill="' + COLORS.a + '" opacity="0.18"/>' +
-    personAt(170,170,'a') +
-    '<g transform="translate(225,110)">' + handleCard() + '</g>' +
-    '<g transform="translate(225,150)"><circle class="dot" cx="0" cy="0" r="4" fill="' + COLORS.ink + '" opacity="0.5"/><circle class="dot" cx="13" cy="0" r="4" fill="' + COLORS.ink + '" opacity="0.5" style="animation-delay:.2s"/><circle class="dot" cx="26" cy="0" r="4" fill="' + COLORS.ink + '" opacity="0.5" style="animation-delay:.4s"/></g>'
-  );
-}
-
-function illusFinale(){
-  let stars = '';
-  for(let i=0;i<12;i++){
-    const x = 20+(i*33)%380, y = 20+(i*47)%90;
-    stars += '<circle class="star" cx="' + x + '" cy="' + y + '" r="' + (1.5+(i%3)) + '" fill="#fff" style="animation-delay:' + (i*0.3).toFixed(1) + 's"/>';
-  }
-  return '<svg viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
-    stars +
-    '<rect x="0" y="176" width="400" height="4" fill="' + COLORS.marigoldSoft + '" opacity="0.5"/>' +
-    '<g class="train-depart" transform="translate(60,90)">' + trainMarkup() + '</g>' +
-    '</svg>';
-}
-
-const ILLUSTRATIONS = {
-  hero:illusHero, queue:illusQueue, feeling:illusFeeling, walking:illusWalking,
-  separate:illusSeparate, realization:illusRealization, voice:illusVoice, call:illusCall,
-  courage:illusCourage, friends:illusFriends, mirror:illusMirror, chase:illusChase,
-  coach:illusCoach, board:illusBoard, finale:illusFinale
-};
-
-document.addEventListener('DOMContentLoaded', function(){
-  document.querySelectorAll('[data-illustration]').forEach(function(el){
-    const fn = ILLUSTRATIONS[el.dataset.illustration];
-    if (fn) el.innerHTML = fn();
-  });
-
-  const io = new IntersectionObserver(function(entries){
-    entries.forEach(function(entry){
-      if (entry.isIntersecting){
-        entry.target.classList.add('in-view');
-        io.unobserve(entry.target);
-      }
-    });
-  }, {threshold:0.2});
-  document.querySelectorAll('.scene').forEach(function(s){ io.observe(s); });
-
-  const fill = document.getElementById('progressFill');
-  const readout = document.getElementById('stopReadout');
-  const stopEls = Array.from(document.querySelectorAll('[data-stop]'));
-
-  function update(){
-    const doc = document.documentElement;
-    const scrollTop = window.scrollY || doc.scrollTop;
-    const height = doc.scrollHeight - doc.clientHeight;
-    const pct = height>0 ? (scrollTop/height)*100 : 0;
-    if (fill) fill.style.width = pct + '%';
-
-    let idx = 0;
-    stopEls.forEach(function(el){
-      const r = el.getBoundingClientRect();
-      if (r.top < window.innerHeight*0.5) idx = Number(el.dataset.stop);
-    });
-    if (readout) readout.textContent = idx===0 ? 'BOARDING' : ('STOP ' + String(idx).padStart(2,'0') + ' / 14');
-  }
-  window.addEventListener('scroll', update, {passive:true});
-  update();
-
-  const finaleTicket = document.querySelector('.finale .ticket');
-  if (finaleTicket){
-    finaleTicket.addEventListener('click', function(e){
-      const stamp = document.createElement('div');
-      stamp.className = 'ticket-stamp';
-      stamp.style.left = (e.clientX - 45) + 'px';
-      stamp.style.top = (e.clientY - 45) + 'px';
-      stamp.innerHTML = '<svg viewBox="0 0 90 90"><circle cx="45" cy="45" r="40" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="45" cy="45" r="32" fill="none" stroke="currentColor" stroke-width="1.5"/><text x="45" y="41" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="currentColor" font-weight="700">TO BE</text><text x="45" y="55" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="currentColor" font-weight="700">CONTINUED</text></svg>';
-      document.body.appendChild(stamp);
-      setTimeout(function(){ stamp.remove(); }, 1800);
-    });
-  }
-});
-</script>
+    <script src="data.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
