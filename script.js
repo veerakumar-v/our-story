@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize welcome screen first
     initWelcomeScreen();
     initNotFoundScreen();
+    initMusicPlayer();
 });
 
 // Called after successful name validation
@@ -291,6 +292,9 @@ function initGallery() {
         img.src = photo.src;
         img.alt = photo.caption || `Memory ${index + 1}`;
         img.loading = 'lazy';
+        if (photo.objectPosition) {
+            img.style.objectPosition = photo.objectPosition;
+        }
 
         // Handle image load error gracefully
         img.onerror = () => {
@@ -763,9 +767,11 @@ function renderUserStory(userData) {
 // ===== USER LOGOUT & USER MODAL LOGIC =====
 function userLogout() {
     currentUserData = null;
-    const storyContainer = document.getElementById('storyContainer');
-    const welcomeOverlay = document.getElementById('welcomeOverlay');
+    const storyContainer  = document.getElementById('storyContainer');
+    const welcomeOverlay  = document.getElementById('welcomeOverlay');
     const notfoundOverlay = document.getElementById('notfoundOverlay');
+    const adminOverlay    = document.getElementById('adminOverlay');
+    const greetingOverlay = document.getElementById('greetingOverlay');
 
     if (storyContainer) {
         storyContainer.classList.remove('revealed');
@@ -773,10 +779,23 @@ function userLogout() {
     }
     if (notfoundOverlay) {
         notfoundOverlay.classList.remove('visible');
+        notfoundOverlay.style.display = 'none';
+    }
+    if (adminOverlay) {
+        adminOverlay.classList.remove('visible');
+        adminOverlay.style.display = 'none';
+    }
+    if (greetingOverlay) {
+        greetingOverlay.classList.remove('visible', 'fade-out');
+        greetingOverlay.style.display = 'none';
     }
     if (welcomeOverlay) {
         welcomeOverlay.classList.remove('hidden', 'removed');
+        welcomeOverlay.style.display = 'flex';
     }
+
+    // Scroll back to top
+    window.scrollTo({ top: 0, behavior: 'instant' });
 
     const input = document.getElementById('nameInput');
     if (input) {
@@ -1310,4 +1329,76 @@ function showToast(icon, text) {
 
     toast.classList.add('show');
     setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+// ===================================================
+//          FLOATING MUSIC PLAYER MODULE
+// ===================================================
+
+function initMusicPlayer() {
+    const player    = document.getElementById('musicPlayer');
+    const discWrap  = document.getElementById('mpDiscWrap');
+    const audio     = document.getElementById('bgAudio');
+
+    if (!player || !discWrap || !audio) return;
+
+    // Set audio source from Supabase Storage
+    const audioSource = document.getElementById('bgAudioSource');
+    if (audioSource && typeof MEDIA !== 'undefined') {
+        audioSource.src = MEDIA.music('song.mp3');
+        audio.load();
+    }
+
+    let isPlaying = false;
+    let panelTimer = null;
+
+    // Click the disc to toggle play / pause
+    discWrap.addEventListener('click', () => {
+        if (isPlaying) {
+            pauseMusic();
+        } else {
+            playMusic();
+        }
+    });
+
+    function playMusic() {
+        const promise = audio.play();
+        if (promise !== undefined) {
+            promise.then(() => {
+                isPlaying = true;
+                player.classList.add('playing');
+                expandPanel();
+            }).catch(() => {
+                // Autoplay blocked — user needs to interact first
+                console.log('Music: Autoplay prevented by browser. User interaction needed.');
+            });
+        }
+    }
+
+    function pauseMusic() {
+        audio.pause();
+        isPlaying = false;
+        player.classList.remove('playing');
+        expandPanel();
+    }
+
+    function expandPanel() {
+        player.classList.add('expanded');
+        clearTimeout(panelTimer);
+        panelTimer = setTimeout(() => {
+            player.classList.remove('expanded');
+        }, 3500);
+    }
+
+    // Show panel briefly on hover
+    discWrap.addEventListener('mouseenter', () => {
+        expandPanel();
+    });
+
+    // Keep audio state across visibility changes
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden && isPlaying) {
+            // Let it keep playing in background
+        }
+    });
 }

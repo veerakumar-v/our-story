@@ -140,12 +140,18 @@ const DEFAULT_STORIES = {
             }
         ],
         photos: [
-            { src: "photos/1.jpg", caption: "Where it all began — the railway station" },
-            { src: "photos/2.jpg", caption: "The ticket queue moment" },
-            { src: "photos/3.jpg", caption: "Walking together" },
-            { src: "photos/4.jpg", caption: "The voice from behind" },
-            { src: "photos/5.jpg", caption: "Found you again" },
-            { src: "photos/6.jpg", caption: "A memory to cherish" }
+            { src: MEDIA.photo("file_00000000b8ac8207a2d6c380e17e5e26.png"), caption: "Where it all began — the railway station", objectPosition: "center center" },
+            { src: MEDIA.photo("IMG_20260727_10482537.jpeg"), caption: "The ticket queue moment", objectPosition: "center 15%" },
+            { src: MEDIA.photo("IMG_20260727_10483567.jpeg"), caption: "Walking together", objectPosition: "center 10%" },
+            { src: MEDIA.photo("IMG_20260727_10483959.jpeg"), caption: "The voice from behind", objectPosition: "center center" },
+            { src: MEDIA.photo("IMG_20260727_105728.jpg"), caption: "Found you again", objectPosition: "center 2%" },
+            { src: MEDIA.photo("IMG_20260727_105805.jpg"), caption: "A memory to cherish", objectPosition: "center 5%" },
+            { src: MEDIA.photo("IMG_20260727_105832.jpg"), caption: "The moment I knew", objectPosition: "center 15%" },
+            { src: MEDIA.photo("IMG_20260727_105908.jpg"), caption: "Hearts aligned", objectPosition: "center 15%" },
+            { src: MEDIA.photo("IMG_20260727_105930.jpg"), caption: "Written in the stars", objectPosition: "center 10%" },
+            { src: MEDIA.photo("IMG_20260727_110002.jpg"), caption: "Our beautiful journey", objectPosition: "center 15%" },
+            { src: MEDIA.photo("IMG_20260727_110035.jpg"), caption: "Every second with you", objectPosition: "center 10%" },
+            { src: MEDIA.photo("IMG_20260727_110113.jpg"), caption: "Forever begins here", objectPosition: "center 5%" }
         ]
     }
 };

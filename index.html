@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="welcome.css">
     <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="player.css">
 </head>
 <body>
 
@@ -821,6 +822,37 @@
 
     </div><!-- end .story-container -->
 
+    <!-- ===== FLOATING MUSIC PLAYER ===== -->
+    <div class="music-player" id="musicPlayer">
+        <div class="mp-disc-wrap" id="mpDiscWrap">
+            <div class="mp-glow"></div>
+            <div class="mp-ring r1"></div>
+            <div class="mp-ring r2"></div>
+            <div class="mp-disc" id="mpDisc"></div>
+            <div class="mp-icon" id="mpIcon">
+                <svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                <svg class="icon-pause" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+            </div>
+        </div>
+        <div class="mp-panel">
+            <div class="mp-info">
+                <span class="mp-song-title" id="mpSongTitle">Our Song</span>
+                <span class="mp-song-artist" id="mpSongArtist">Background Music</span>
+            </div>
+            <div class="mp-eq">
+                <div class="mp-eq-bar"></div>
+                <div class="mp-eq-bar"></div>
+                <div class="mp-eq-bar"></div>
+                <div class="mp-eq-bar"></div>
+                <div class="mp-eq-bar"></div>
+            </div>
+        </div>
+        <audio id="bgAudio" loop preload="auto">
+            <source src="" id="bgAudioSource" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <script src="supabase-config.js"></script>
     <script src="data.js"></script>
     <script src="script.js"></script>
 </body>
