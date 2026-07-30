@@ -1345,7 +1345,7 @@ function initMusicPlayer() {
     // Set audio source from Supabase Storage
     const audioSource = document.getElementById('bgAudioSource');
     if (audioSource && typeof MEDIA !== 'undefined') {
-        audioSource.src = MEDIA.music('song.mp3');
+        audioSource.src = MEDIA.music('Theme%20of%20RADHA%20-%20Armonian%20-%20Armonian.mp3');
         audio.load();
     }
 

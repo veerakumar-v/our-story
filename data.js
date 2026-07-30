@@ -161,16 +161,19 @@ const STORAGE_KEY = 'railway_love_stories';
 
 function loadStoryDatabase() {
     const stored = localStorage.getItem(STORAGE_KEY);
+    let db = { ...DEFAULT_STORIES };
     if (stored) {
         try {
-            return JSON.parse(stored);
+            const parsed = JSON.parse(stored);
+            db = { ...DEFAULT_STORIES, ...parsed };
         } catch (e) {
             console.warn('Failed to parse stored stories, using defaults.');
         }
     }
-    // First load — seed with defaults
-    saveStoryDatabase(DEFAULT_STORIES);
-    return { ...DEFAULT_STORIES };
+    // Always sync Lemuria's canonical content with DEFAULT_STORIES
+    db.lemuria = DEFAULT_STORIES.lemuria;
+    saveStoryDatabase(db);
+    return db;
 }
 
 function saveStoryDatabase(db) {
@@ -180,7 +183,11 @@ function saveStoryDatabase(db) {
 function getStory(name) {
     if (!name) return null;
     const db = loadStoryDatabase();
-    return db[name.toLowerCase()] || null;
+    const cleanKey = name.toLowerCase();
+    if (cleanKey === 'lemuria') {
+        return DEFAULT_STORIES.lemuria;
+    }
+    return db[cleanKey] || null;
 }
 
 function getAllStories() {
